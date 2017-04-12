@@ -30,42 +30,9 @@ end
 end
 
 def to_roman(int)
-if int==1 
-  @newstr<< "I"
-end
-@newstr ||=""
-roman_mapping = {
-  1000 => "M",
-  900 => "CM",
-  500 => "D",
-  400 => "CD",
-  100 => "C",
-  90 => "XC",
-  50 => "L",
-  40 => "XL",
-  10 => "X",
-  9 => "IX",
-  5 => "V",
-  4 => "IV",
-  1 => "I"
-}
-roman_mapping.each { |key, value|
-  
-  if int>=key&&@newstr[-1]!="I"
-    @newstr<< value*(int/key)
-    if (int%key!=0)
-    to_roman(int%key)
-    end
-  end
-  
-}
-  @newstr
-end
-
-def to_roman(int)
 int=int.to_s
 @newstr ||=""
-roman_mapping = {
+romap = {
   1000 => "M",
   900 => "CM",
   500 => "D",
@@ -81,49 +48,32 @@ roman_mapping = {
   1 => "I"
 }
   char=int[0]
-  puts "now char is #{char}"
-  newindex=(int.length-1)-int.index(char)
+  cindex=(int.length-1)-int.index(char)
   char=char.to_i
-  puts "#{10**newindex}"
-  puts "char is #{char}"
-  
+  def prep_loop(int)
+    int[0]=""
+    to_roman(int.to_i)
+  end
   if char>=9
-    @newstr<< roman_mapping[9*(10**newindex)]
-    int=int.to_s
-    int[0]=""
-    puts "int is  #{int}"
-    to_roman(int)
+    @newstr<< romap[9*(10**cindex)]
+    #try to refactor this part out even
+    prep_loop(int)
   elsif char>=5
-    @newstr<< roman_mapping[5*(10**newindex)]
-    @newstr<< roman_mapping[(char%5)*(10**newindex)]
-    int=int.to_s
-    int[0]=""
-    puts "int is  #{int}"
-    to_roman(int)
+    @newstr<< romap[5*(10**cindex)]+romap[(char%5)*(10**cindex)]
+    prep_loop(int)
   elsif char==4
-    @newstr<< roman_mapping[4*(10**newindex)]
-    int=int.to_s
-    int[0]=""
-    puts "int is  #{int}"
-    to_roman(int)
+    @newstr<< romap[4*(10**cindex)]
+    prep_loop(int)
   elsif char>=1
-    puts "check"
     char.times do
-      @newstr<< roman_mapping[1*(10**newindex)]
+      @newstr<< romap[1*(10**cindex)]
     end
-    puts @newstr
-    int=int.to_s
-    int[0]=""
-    puts "int is #{int}"
-    if int!=""
-      to_roman(int)
-    end
-      
+     prep_loop(int) if int!=""
   end
 @newstr
 end
 
-to_roman(142)
+to_roman(162)
 
 def to_integer(str)
 @newint ||= 0
